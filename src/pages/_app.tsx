@@ -1,6 +1,19 @@
-import '@/styles/globals.css'
-import type { AppProps } from 'next/app'
+import { AppMantineProvider } from "@/lib/mantine/AppMantineProvider";
+import "@/styles/globals.css";
+import type { AppProps, CustomAppPage } from "next/app";
 
-export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
-}
+const App: CustomAppPage = ({ Component, pageProps }) => {
+  const getLayout =
+    Component.getLayout ||
+    ((page) => {
+      return page;
+    });
+
+  return (
+    <AppMantineProvider>
+      {getLayout(<Component {...pageProps} />)}
+    </AppMantineProvider>
+  );
+};
+
+export default App;
