@@ -1,98 +1,116 @@
 import { useFetchTodos } from "@/lib/swr/useFetchTodos";
-import {
-  useTodoCreate,
-  useTodoDelete,
-  useTodoUpdate,
-} from "@/lib/swr/useTodoMutate";
+import { useCreateTodo, useUpdateTodo } from "@/lib/swr/useMutateTodo";
 import {
   ActionIcon,
-  Center,
   Checkbox,
+  Container,
   Flex,
+  Group,
   List,
+  MantineProvider,
+  Modal,
   Text,
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconCirclePlus, IconTrash } from "@tabler/icons-react";
+import { useDisclosure } from "@mantine/hooks";
+import { IconPlus } from "@tabler/icons-react";
+import { FC, ReactNode } from "react";
+import { MenueButton } from "./MenueButton";
 
-export const TodosList = (props: { dueDate: string; color: string }) => {
-  const { createTrigger, isCreating } = useTodoCreate();
-  const { updateTrigger, isUpdating } = useTodoUpdate();
-  const { deleteTrigger, isDeleting } = useTodoDelete();
+type Props = {
+  dueDate: string;
+  color: string;
+  title: ReactNode;
+};
+
+export const TodosList: FC<Props> = (props) => {
+  const [opened, { open, close }] = useDisclosure(false);
 
   const form = useForm({
     initialValues: {
       title: "",
+      dueDate: props.dueDate,
     },
-    validate: {},
   });
-
   const { todos, error, isLoading } = useFetchTodos(props.dueDate);
+  const { createTrigger } = useCreateTodo();
+  const { updateTrigger } = useUpdateTodo();
 
-  if (error) {
-    return <Center>Error</Center>;
-  }
-  if (isLoading) {
-    return <Center>Loading...</Center>;
-  }
+  if (error) return <div>failed to load</div>;
+  if (isLoading) return <div>loading...</div>;
 
-  console.log(props.dueDate);
+  const theme = {
+    primaryColor: props.color,
+  };
+
   return (
-    <List listStyleType="none">
-      {todos === undefined
-        ? null
-        : todos.map((todo) => {
-            return (
-              <List.Item key={todo.id} w="30rem" pb={"1rem"}>
-                <Flex>
-                  <Checkbox
-                    color={props.color}
-                    radius="xl"
-                    pt={"0.25rem"}
-                    pr={"1rem"}
-                    checked={todo.isDone}
-                    onChange={() =>
-                      updateTrigger({
-                        pass: todo.id,
-                        data: {
-                          title: todo.title,
-                          isDone: !todo.isDone,
-                          dueDate: todo.dueDate,
-                        },
-                      })
-                    }
-                  />
-                  <Text
-                    color={todo.isDone ? "dark.1" : "dark"}
-                    td={todo.isDone ? "line-through" : ""}
-                  >
-                    {todo.title}
-                  </Text>
-                  <ActionIcon onClick={() => deleteTrigger(todo.id)}>
-                    <IconTrash />
-                  </ActionIcon>
-                </Flex>
-              </List.Item>
-            );
-          })}
-      <List.Item key={"input"} w="30rem" pb={"1rem"}>
+    <MantineProvider theme={theme}>
+      <Container mx={0} mb={"4rem"} w={"100%"}>
         <Flex>
-          <IconCirclePlus color="gray" />
-          <form
-            onSubmit={form.onSubmit((values) =>
-              createTrigger({ title: values.title, dueDate: props.dueDate })
-            )}
-          >
-            <TextInput
-              placeholder="Add a todo"
-              required
-              {...form.getInputProps("title")}
-            />
-            {/* <Button type="submit">追加</Button> */}
-          </form>
+          {props.title}
+          <div>
+            <Modal
+              opened={opened}
+              onClose={close}
+              size="70%"
+              overlayProps={{
+                color: "gray",
+                opacity: 0.2,
+                blur: 3,
+              }}
+            >
+              <form
+                onSubmit={form.onSubmit((values) =>
+                  createTrigger(values, {
+                    optimisticData: (current) => current,
+                    rollbackOnError: true,
+                    onSuccess: close,
+                  })
+                )}
+              >
+                <TextInput
+                  placeholder="add Todo."
+                  {...form.getInputProps("title")}
+                />
+              </form>
+            </Modal>
+
+            <Group position="center">
+              <ActionIcon
+                onClick={open}
+                color={props.color}
+                m={"0.25rem"}
+                radius="xl"
+              >
+                <IconPlus stroke="3px" />
+              </ActionIcon>
+            </Group>
+          </div>
         </Flex>
-      </List.Item>
-    </List>
+        <List listStyleType={"none"}>
+          {todos === undefined
+            ? null
+            : todos.map((todo) => (
+                <List.Item key={todo.id} mb={"1rem"}>
+                  <Flex>
+                    <Checkbox
+                      mr={"1rem"}
+                      color={props.color}
+                      radius="xl"
+                      size="md"
+                      checked={todo.isDone}
+                      onChange={() =>
+                        updateTrigger({ ...todo, isDone: !todo.isDone })
+                      }
+                    />
+                    <Text w="400px">{todo.title}</Text>
+                    <MenueButton {...todo} />
+                  </Flex>
+                </List.Item>
+              ))}
+        </List>
+      </Container>
+    </MantineProvider>
   );
 };
