@@ -18,11 +18,7 @@ export const useFetchUserData = () => {
     data: user,
     error,
     isLoading,
-  } = useSWR<User>("http://localhost:8080/api/v1/user", fetcher, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
+  } = useSWR<User>("http://localhost:8080/api/v1/user", fetcher, {});
 
   return {
     user,

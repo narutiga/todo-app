@@ -33,7 +33,7 @@ export const TodosList: FC<Props> = (props) => {
       dueDate: props.dueDate,
     },
   });
-  const { todos, error, isLoading } = useFetchTodos(props.dueDate);
+  const { todos, mutate, error, isLoading } = useFetchTodos(props.dueDate);
   const { createTrigger } = useCreateTodo();
   const { updateTrigger } = useUpdateTodo();
 
@@ -63,8 +63,6 @@ export const TodosList: FC<Props> = (props) => {
               <form
                 onSubmit={form.onSubmit((values) =>
                   createTrigger(values, {
-                    optimisticData: (current) => current,
-                    rollbackOnError: true,
                     onSuccess: close,
                   })
                 )}

@@ -1,5 +1,5 @@
+import useSWRImmutable from "swr";
 import axios from "axios";
-import useSWR from "swr";
 
 type Todo = {
   id: string;
@@ -8,16 +8,27 @@ type Todo = {
   dueDate: string;
 };
 
-const fetcher = (dueDate: string) =>
-  axios
-    .get(`http://localhost:8080/api/v1/todos?dueDate=${dueDate}`)
-    .then((res) => res.data);
+const fetcher = async (dueDate: string) => {
+  const response = await axios.get(
+    `http://localhost:8080/api/v1/todos/?dueDate=${dueDate}`,
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+};
 
 export const useFetchTodos = (dueDate: string) => {
-  const { data: todos, error, isLoading } = useSWR<Todo[]>(dueDate, fetcher);
+  const {
+    data: todos,
+    mutate,
+    error,
+    isLoading,
+  } = useSWRImmutable<Todo[]>(dueDate, fetcher, {});
 
   return {
     todos,
+    mutate,
     error,
     isLoading,
   };
