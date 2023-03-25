@@ -1,6 +1,16 @@
 import { AppMantineProvider } from "@/lib/mantine/AppMantineProvider";
 import "@/styles/globals.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { AppProps, CustomAppPage } from "next/app";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App: CustomAppPage = ({ Component, pageProps }) => {
   const getLayout =
@@ -10,9 +20,11 @@ const App: CustomAppPage = ({ Component, pageProps }) => {
     });
 
   return (
-    <AppMantineProvider>
-      {getLayout(<Component {...pageProps} />)}
-    </AppMantineProvider>
+    <QueryClientProvider client={queryClient}>
+      <AppMantineProvider>
+        {getLayout(<Component {...pageProps} />)}
+      </AppMantineProvider>
+    </QueryClientProvider>
   );
 };
 
