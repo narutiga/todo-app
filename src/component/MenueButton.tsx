@@ -1,4 +1,5 @@
 import { useChangeDueDateTodo, useDeleteTodo } from "@/lib/swr/useMutateTodo";
+import { useMutateTodo } from "@/lib/tanstackQuery/useMutateTodo";
 import { Flex, Menu } from "@mantine/core";
 import {
   IconChevronDown,
@@ -12,6 +13,8 @@ import {
 export const MenueButton = (todo: any) => {
   const { changeDueDateTrigger } = useChangeDueDateTodo();
   const { deleteTrigger } = useDeleteTodo();
+  const { deleteTodoMutation } = useMutateTodo();
+  const { changeDueDateMutation } = useMutateTodo();
 
   return (
     <Menu shadow="xs" width={180} radius="md">
@@ -25,9 +28,10 @@ export const MenueButton = (todo: any) => {
             <IconChevronUp
               color="gray"
               onClick={() =>
-                changeDueDateTrigger({
+                changeDueDateMutation.mutate({
                   ...todo,
-                  dueDate: todo.dueDate === "tomorrow" ? "today" : "tomorrow",
+                  newDueDate:
+                    todo.dueDate === "tomorrow" ? "today" : "tomorrow",
                 })
               }
             />
@@ -36,7 +40,7 @@ export const MenueButton = (todo: any) => {
             <IconChevronsUp
               color="gray"
               onClick={() =>
-                changeDueDateTrigger({ ...todo, dueDate: "today" })
+                changeDueDateMutation.mutate({ ...todo, newDueDate: "today" })
               }
             />
           </Menu.Item>
@@ -44,9 +48,10 @@ export const MenueButton = (todo: any) => {
             <IconChevronDown
               color="gray"
               onClick={() =>
-                changeDueDateTrigger({
+                changeDueDateMutation.mutate({
                   ...todo,
-                  dueDate: todo.dueDate === "tomorrow" ? "later" : "tomorrow",
+                  newDueDate:
+                    todo.dueDate === "tomorrow" ? "later" : "tomorrow",
                 })
               }
             />
@@ -55,12 +60,15 @@ export const MenueButton = (todo: any) => {
             <IconChevronsDown
               color="gray"
               onClick={() =>
-                changeDueDateTrigger({ ...todo, dueDate: "later" })
+                changeDueDateMutation.mutate({ ...todo, newDueDate: "later" })
               }
             />
           </Menu.Item>
           <Menu.Item>
-            <IconTrash color="gray" onClick={() => deleteTrigger(todo.id)} />
+            <IconTrash
+              color="gray"
+              onClick={() => deleteTodoMutation.mutate(todo)}
+            />
           </Menu.Item>
         </Flex>
       </Menu.Dropdown>

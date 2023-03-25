@@ -1,5 +1,7 @@
 import { useFetchTodos } from "@/lib/swr/useFetchTodos";
 import { useCreateTodo, useUpdateTodo } from "@/lib/swr/useMutateTodo";
+import { useMutateTodo } from "@/lib/tanstackQuery/useMutateTodo";
+import { useQueryTodos } from "@/lib/tanstackQuery/useQueryTodos";
 import {
   ActionIcon,
   Checkbox,
@@ -33,12 +35,16 @@ export const TodosList: FC<Props> = (props) => {
       dueDate: props.dueDate,
     },
   });
-  const { todos, mutate, error, isLoading } = useFetchTodos(props.dueDate);
-  const { createTrigger } = useCreateTodo();
-  const { updateTrigger } = useUpdateTodo();
+  const { data: todos, status } = useQueryTodos(props.dueDate);
+  const { createTodoMutation } = useMutateTodo();
+  const { updateTodoMutation } = useMutateTodo();
 
-  if (error) return <div>failed to load</div>;
-  if (isLoading) return <div>loading...</div>;
+  // const { todos, mutate, error, isLoading } = useFetchTodos(props.dueDate);
+  // const { createTrigger } = useCreateTodo();
+  // const { updateTrigger } = useUpdateTodo();
+
+  // if (error) return <div>failed to load</div>;
+  // if (isLoading) return <div>loading...</div>;
 
   const theme = {
     primaryColor: props.color,
@@ -62,10 +68,13 @@ export const TodosList: FC<Props> = (props) => {
             >
               <form
                 onSubmit={form.onSubmit((values) =>
-                  createTrigger(values, {
-                    onSuccess: close,
-                  })
+                  createTodoMutation.mutate(values)
                 )}
+                // onSubmit={form.onSubmit((values) =>
+                //   createTrigger(values, {
+                //     onSuccess: close,
+                //   })
+                // )}
               >
                 <TextInput
                   placeholder="add Todo."
@@ -99,8 +108,14 @@ export const TodosList: FC<Props> = (props) => {
                       size="md"
                       checked={todo.isDone}
                       onChange={() =>
-                        updateTrigger({ ...todo, isDone: !todo.isDone })
+                        updateTodoMutation.mutate({
+                          ...todo,
+                          isDone: !todo.isDone,
+                        })
                       }
+                      // onChange={() =>
+                      //   updateTrigger({ ...todo, isDone: !todo.isDone })
+                      // }
                     />
                     <Text w="400px">{todo.title}</Text>
                     <MenueButton {...todo} />
