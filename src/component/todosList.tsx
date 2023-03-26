@@ -15,23 +15,25 @@ import {
   Skeleton,
   Text,
   Textarea,
-  TextInput,
 } from "@mantine/core";
 import { MenueButton } from "./MenueButton";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";
+import { SignInModal } from "./SignInModal";
+import { useQueryUserData } from "@/lib/tanstackQuery/useQueryUserData";
 
 type Props = {
   dueDate: string;
   color: string;
   title: ReactNode;
+  form: ReactNode;
 };
 
-export const TodosList: FC<Props> = (props) => {
+export const TodoForm = (props: any) => {
+  const { data: user, status } = useQueryUserData();
   const [opened, { open, close }] = useDisclosure(false);
-  const { data: todos, status } = useQueryTodos(props.dueDate);
-  const { createTodoMutation, updateTodoMutation } = useMutateTodo();
+  const { createTodoMutation } = useMutateTodo();
 
   const form = useForm({
     initialValues: {
@@ -46,39 +48,60 @@ export const TodosList: FC<Props> = (props) => {
     primaryColor: props.color,
   };
 
+  if (user) {
+    return (
+      <div>
+        <Modal opened={opened} onClose={close} fullScreen>
+          <form
+            onSubmit={form.onSubmit((values) =>
+              createTodoMutation.mutate(values)
+            )}
+          >
+            <Textarea
+              placeholder="add Todo."
+              {...form.getInputProps("title")}
+            />
+            <Button mt="2rem" type="submit" onClick={close}>
+              登録
+            </Button>
+          </form>
+        </Modal>
+
+        <Group position="center">
+          <ActionIcon onClick={open} bg={props.color} m={"0.25rem"} radius="xl">
+            <IconPlus stroke="3px" color="white" />
+          </ActionIcon>
+        </Group>
+      </div>
+    );
+  }
+
+  return (
+    <SignInModal
+      button={
+        <ActionIcon bg={props.color} m={"0.25rem"} radius="xl">
+          <IconPlus stroke="3px" color="white" />
+        </ActionIcon>
+      }
+    />
+  );
+};
+
+/** @package */
+export const TodosList: FC<Props> = (props) => {
+  const { data: todos, status } = useQueryTodos(props.dueDate);
+  const { updateTodoMutation } = useMutateTodo();
+
+  const theme = {
+    primaryColor: props.color,
+  };
+
   return (
     <MantineProvider theme={theme}>
       <Container mx={0} mb={"4rem"} w={"100%"}>
         <Flex>
           {props.title}
-          <div>
-            <Modal opened={opened} onClose={close} fullScreen>
-              <form
-                onSubmit={form.onSubmit((values) =>
-                  createTodoMutation.mutate(values)
-                )}
-              >
-                <Textarea
-                  placeholder="add Todo."
-                  {...form.getInputProps("title")}
-                />
-                <Button mt="2rem" type="submit" onClick={close}>
-                  登録
-                </Button>
-              </form>
-            </Modal>
-
-            <Group position="center">
-              <ActionIcon
-                onClick={open}
-                bg={props.color}
-                m={"0.25rem"}
-                radius="xl"
-              >
-                <IconPlus stroke="3px" color="white" />
-              </ActionIcon>
-            </Group>
-          </div>
+          {props.form}
         </Flex>
         <List listStyleType={"none"}>
           {status === "loading" ? <Skeleton height={60} /> : null}

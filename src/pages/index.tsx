@@ -1,8 +1,10 @@
 import { SignInModal, SignOutMenu, TodosList } from "@/component";
+import { TodoForm } from "@/component/TodosList";
 import { useQueryUserData } from "@/lib/tanstackQuery/useQueryUserData";
 import {
   AppShell,
   Avatar,
+  Button,
   Flex,
   Footer,
   Header,
@@ -34,7 +36,13 @@ const Home = () => {
                   avatar={<Avatar src={user.image} alt="it's me" radius="xl" />}
                 />
               ) : (
-                <SignInModal />
+                <SignInModal
+                  button={
+                    <Button color="red" size="sm">
+                      Login
+                    </Button>
+                  }
+                />
               )}
             </Flex>
           }
@@ -62,9 +70,12 @@ const Home = () => {
             dueDate={attribute.dueDate}
             color={attribute.color}
             title={
-              <Title order={2} mb={"2rem"} color={attribute.color}>
+              <Title order={2} mr="1rem" mb="2rem" color={attribute.color}>
                 {attribute.title}
               </Title>
+            }
+            form={
+              <TodoForm dueDate={attribute.dueDate} color={attribute.color} />
             }
           />
         ))}
