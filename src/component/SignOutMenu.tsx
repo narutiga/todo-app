@@ -1,6 +1,9 @@
-import { FC, ReactNode, useState } from "react";
-import { Button, Menu } from "@mantine/core";
+import { FC, ReactNode } from "react";
+import { Menu } from "@mantine/core";
 import { IconDoorExit } from "@tabler/icons-react";
+
+const URL =
+  process.env.SIGN_OUT_URL || "http://localhost:8080/api/v1/auth/google/logout";
 
 type Props = {
   avatar: ReactNode;
@@ -12,10 +15,7 @@ export const SignOutMenu: FC<Props> = (props) => {
     <Menu>
       <Menu.Target>{props.avatar}</Menu.Target>
       <Menu.Dropdown>
-        <form
-          method="post"
-          action="http://localhost:8080/api/v1/auth/google/logout"
-        >
+        <form method="post" action={URL}>
           <Menu.Item icon={<IconDoorExit color="gray" />} type="submit">
             ログアウト
           </Menu.Item>
