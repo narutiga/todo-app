@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
+const URL = process.env.TODOS_API || "http://localhost:8080/api/v1/todos/";
+
 type Todo = {
   id: string;
   title: string;
@@ -20,24 +22,22 @@ export const useMutateTodo = () => {
   const queryClient = useQueryClient();
 
   const createTodoMutation = useMutation({
-    mutationFn: async (newTodo: Omit<Todo, "id" | "isDone">) => {
-      const response = await axios.post(
-        "http://localhost:8080/api/v1/todos/",
-        newTodo,
-        {
-          withCredentials: true,
-        }
-      );
+    mutationFn: async (newTodo: Todo) => {
+      const response = await axios.post(URL, newTodo, {
+        withCredentials: true,
+      });
       return response.data;
     },
     onMutate: async (newTodo) => {
-      await queryClient.cancelQueries({ queryKey: ["`${dueDate}todos`"] });
+      await queryClient.cancelQueries({
+        queryKey: [`${newTodo.dueDate}todos`],
+      });
       const previousTodos = queryClient.getQueryData([
         `${newTodo.dueDate}todos`,
       ]);
       queryClient.setQueryData([`${newTodo.dueDate}todos`], (old: any) => [
         ...old,
-        { ...newTodo, id: Math.random() },
+        newTodo,
       ]);
       return { previousTodos };
     },
@@ -48,24 +48,22 @@ export const useMutateTodo = () => {
         context.previousTodos
       );
     },
-    onSettled: (newTodo) => {
-      queryClient.invalidateQueries({ queryKey: [`${newTodo.dueDate}todos`] });
-    },
+    // onSettled: (newTodo) => {
+    //   queryClient.invalidateQueries({ queryKey: [`${newTodo.dueDate}todos`] });
+    // },
   });
 
   const updateTodoMutation = useMutation({
     mutationFn: async (updatedTodo: Todo) => {
-      const response = await axios.put(
-        `http://localhost:8080/api/v1/todos/${updatedTodo.id}`,
-        updatedTodo,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.put(URL + updatedTodo.id, updatedTodo, {
+        withCredentials: true,
+      });
       return response.data;
     },
     onMutate: async (updatedTodo: Todo) => {
-      await queryClient.cancelQueries({ queryKey: ["`${dueDate}todos`"] });
+      await queryClient.cancelQueries({
+        queryKey: [`${updatedTodo.dueDate}todos`],
+      });
       const previousTodos = queryClient.getQueryData([
         `${updatedTodo.dueDate}todos`,
       ]);
@@ -83,25 +81,24 @@ export const useMutateTodo = () => {
         context.previousTodos
       );
     },
-    onSettled: (updatedTodo) => {
-      queryClient.invalidateQueries({
-        queryKey: [`${updatedTodo.dueDate}todos`],
-      });
-    },
+    // onSettled: (updatedTodo) => {
+    //   queryClient.invalidateQueries({
+    //     queryKey: [`${updatedTodo.dueDate}todos`],
+    //   });
+    // },
   });
 
   const deleteTodoMutation = useMutation({
     mutationFn: async (deletedTodo: Todo) => {
-      const response = await axios.delete(
-        `http://localhost:8080/api/v1/todos/${deletedTodo.id}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.delete(URL + deletedTodo.id, {
+        withCredentials: true,
+      });
       return response.data;
     },
     onMutate: async (deletedTodo) => {
-      await queryClient.cancelQueries({ queryKey: ["`${dueDate}todos`"] });
+      await queryClient.cancelQueries({
+        queryKey: [`${deletedTodo.dueDate}todos`],
+      });
       const previousTodos = queryClient.getQueryData([
         `${deletedTodo.dueDate}todos`,
       ]);
@@ -117,17 +114,17 @@ export const useMutateTodo = () => {
         context.previousTodos
       );
     },
-    onSettled: (deletedTodo) => {
-      queryClient.invalidateQueries({
-        queryKey: [`${deletedTodo.dueDate}todos`],
-      });
-    },
+    // onSettled: (deletedTodo) => {
+    //   queryClient.invalidateQueries({
+    //     queryKey: [`${deletedTodo.dueDate}todos`],
+    //   });
+    // },
   });
 
   const changeDueDateMutation = useMutation({
     mutationFn: async (todo: ChangeDueDateTodo) => {
       const response = await axios.patch(
-        `http://localhost:8080/api/v1/todos/${todo.id}`,
+        URL + todo.id,
         { dueDate: todo.newDueDate },
         {
           withCredentials: true,
@@ -167,10 +164,10 @@ export const useMutateTodo = () => {
         context.newDueDateTodos
       );
     },
-    onSettled: (todo) => {
-      queryClient.invalidateQueries({ queryKey: [`${todo.dueDate}todos`] });
-      queryClient.invalidateQueries({ queryKey: [`${todo.newDueDate}todos`] });
-    },
+    // onSettled: (todo) => {
+    //   queryClient.invalidateQueries({ queryKey: [`${todo.dueDate}todos`] });
+    //   queryClient.invalidateQueries({ queryKey: [`${todo.newDueDate}todos`] });
+    // },
   });
 
   return {
