@@ -4,6 +4,7 @@ import { useQueryTodos } from "@/lib/tanstackQuery/useQueryTodos";
 import { v4 as uuidv4 } from "uuid";
 import {
   ActionIcon,
+  Button,
   Checkbox,
   Container,
   Flex,
@@ -11,7 +12,9 @@ import {
   List,
   MantineProvider,
   Modal,
+  Skeleton,
   Text,
+  Textarea,
   TextInput,
 } from "@mantine/core";
 import { MenueButton } from "./MenueButton";
@@ -49,41 +52,36 @@ export const TodosList: FC<Props> = (props) => {
         <Flex>
           {props.title}
           <div>
-            <Modal
-              opened={opened}
-              onClose={close}
-              size="70%"
-              overlayProps={{
-                color: "gray",
-                opacity: 0.2,
-                blur: 3,
-              }}
-            >
+            <Modal opened={opened} onClose={close} fullScreen>
               <form
                 onSubmit={form.onSubmit((values) =>
                   createTodoMutation.mutate(values)
                 )}
               >
-                <TextInput
+                <Textarea
                   placeholder="add Todo."
                   {...form.getInputProps("title")}
                 />
+                <Button mt="2rem" type="submit" onClick={close}>
+                  登録
+                </Button>
               </form>
             </Modal>
 
             <Group position="center">
               <ActionIcon
                 onClick={open}
-                color={props.color}
+                bg={props.color}
                 m={"0.25rem"}
                 radius="xl"
               >
-                <IconPlus stroke="3px" />
+                <IconPlus stroke="3px" color="white" />
               </ActionIcon>
             </Group>
           </div>
         </Flex>
         <List listStyleType={"none"}>
+          {status === "loading" ? <Skeleton height={60} /> : null}
           {todos === undefined
             ? null
             : todos.map((todo) => (
@@ -102,7 +100,13 @@ export const TodosList: FC<Props> = (props) => {
                         })
                       }
                     />
-                    <Text w="400px">{todo.title}</Text>
+                    <Text
+                      w="400px"
+                      c={todo.isDone ? "gray" : "dark"}
+                      td={todo.isDone ? "line-through" : ""}
+                    >
+                      {todo.title}
+                    </Text>
                     <MenueButton {...todo} />
                   </Flex>
                 </List.Item>
