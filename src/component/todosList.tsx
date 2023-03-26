@@ -1,7 +1,7 @@
-import { useFetchTodos } from "@/lib/swr/useFetchTodos";
-import { useCreateTodo, useUpdateTodo } from "@/lib/swr/useMutateTodo";
+import { FC, ReactNode } from "react";
 import { useMutateTodo } from "@/lib/tanstackQuery/useMutateTodo";
 import { useQueryTodos } from "@/lib/tanstackQuery/useQueryTodos";
+import { v4 as uuidv4 } from "uuid";
 import {
   ActionIcon,
   Checkbox,
@@ -14,11 +14,10 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
+import { MenueButton } from "./MenueButton";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";
-import { FC, ReactNode } from "react";
-import { MenueButton } from "./MenueButton";
 
 type Props = {
   dueDate: string;
@@ -28,23 +27,17 @@ type Props = {
 
 export const TodosList: FC<Props> = (props) => {
   const [opened, { open, close }] = useDisclosure(false);
+  const { data: todos, status } = useQueryTodos(props.dueDate);
+  const { createTodoMutation, updateTodoMutation } = useMutateTodo();
 
   const form = useForm({
     initialValues: {
+      id: uuidv4(),
       title: "",
+      isDone: false,
       dueDate: props.dueDate,
     },
   });
-  const { data: todos, status } = useQueryTodos(props.dueDate);
-  const { createTodoMutation } = useMutateTodo();
-  const { updateTodoMutation } = useMutateTodo();
-
-  // const { todos, mutate, error, isLoading } = useFetchTodos(props.dueDate);
-  // const { createTrigger } = useCreateTodo();
-  // const { updateTrigger } = useUpdateTodo();
-
-  // if (error) return <div>failed to load</div>;
-  // if (isLoading) return <div>loading...</div>;
 
   const theme = {
     primaryColor: props.color,
@@ -70,11 +63,6 @@ export const TodosList: FC<Props> = (props) => {
                 onSubmit={form.onSubmit((values) =>
                   createTodoMutation.mutate(values)
                 )}
-                // onSubmit={form.onSubmit((values) =>
-                //   createTrigger(values, {
-                //     onSuccess: close,
-                //   })
-                // )}
               >
                 <TextInput
                   placeholder="add Todo."
@@ -113,9 +101,6 @@ export const TodosList: FC<Props> = (props) => {
                           isDone: !todo.isDone,
                         })
                       }
-                      // onChange={() =>
-                      //   updateTrigger({ ...todo, isDone: !todo.isDone })
-                      // }
                     />
                     <Text w="400px">{todo.title}</Text>
                     <MenueButton {...todo} />
