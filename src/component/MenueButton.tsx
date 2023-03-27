@@ -1,4 +1,3 @@
-import { useChangeDueDateTodo, useDeleteTodo } from "@/lib/swr/useMutateTodo";
 import { useMutateTodo } from "@/lib/tanstackQuery/useMutateTodo";
 import { Flex, Menu } from "@mantine/core";
 import {
@@ -10,9 +9,8 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 
+/** @package */
 export const MenueButton = (todo: any) => {
-  const { changeDueDateTrigger } = useChangeDueDateTodo();
-  const { deleteTrigger } = useDeleteTodo();
   const { deleteTodoMutation } = useMutateTodo();
   const { changeDueDateMutation } = useMutateTodo();
 

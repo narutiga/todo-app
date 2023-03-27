@@ -10,7 +10,7 @@ type Props = {
 };
 
 /** @package */
-export const SignInModal: FC = () => {
+export const SignInModal: FC<Props> = (props) => {
   const [opened, { open, close }] = useDisclosure(false);
 
   return (
@@ -49,9 +49,7 @@ export const SignInModal: FC = () => {
         </Text>
       </Modal>
 
-      <Button onClick={open} color="red" size="sm">
-        Log in
-      </Button>
+      <a onClick={open}>{props.button}</a>
     </>
   );
 };
