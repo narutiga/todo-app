@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const URL = process.env.TODOS_API || "http://localhost:8080/api/v1/todos/";
+const URL =
+  process.env.NEXT_PUBLIC_TODOS_API || "http://localhost:8080/api/v1/todos/";
 
 type Todo = {
   id: string;
