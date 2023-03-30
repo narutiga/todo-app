@@ -1,6 +1,8 @@
 import { FC, ReactNode } from "react";
 import { Modal, Button, Title, Text, Center } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import Image from "next/image";
+import btn_google_signin from "./../../public/btn_google_signin.png";
 
 const URL =
   process.env.SIGN_IN_URL || "http://localhost:8080/api/v1/auth/google";
@@ -34,13 +36,19 @@ export const SignInModal: FC<Props> = (props) => {
               type="submit"
               variant="default"
               size="md"
+              p={0}
               sx={(theme) => ({
                 borderRadius: theme.radius.md,
                 fontWeight: 600,
                 boxShadow: theme.shadows.xs,
               })}
             >
-              Login with Google
+              <Image
+                src={btn_google_signin}
+                alt="Google Sign In"
+                sizes="100%"
+                style={{ borderRadius: "1rem", objectFit: "cover" }}
+              />
             </Button>
           </form>
         </Center>
