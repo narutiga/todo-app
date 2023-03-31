@@ -5,7 +5,8 @@ import Image from "next/image";
 import btn_google_signin from "./../../public/btn_google_signin.png";
 
 const URL =
-  process.env.SIGN_IN_URL || "http://localhost:8080/api/v1/auth/google";
+  process.env.NEXT_PUBLIC_SIGN_IN_URL ||
+  "http://localhost:8080/api/v1/auth/google";
 
 type Props = {
   button: ReactNode;
