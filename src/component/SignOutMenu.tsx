@@ -3,7 +3,8 @@ import { Menu } from "@mantine/core";
 import { IconDoorExit } from "@tabler/icons-react";
 
 const URL =
-  process.env.SIGN_OUT_URL || "http://localhost:8080/api/v1/auth/google/logout";
+  process.env.NEXT_PUBLIC_SIGN_OUT_URL ||
+  "http://localhost:8080/api/v1/auth/google/logout";
 
 type Props = {
   avatar: ReactNode;
