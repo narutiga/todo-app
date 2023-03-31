@@ -3,7 +3,7 @@ import { Menu } from "@mantine/core";
 import { IconDoorExit } from "@tabler/icons-react";
 
 const URL =
-  process.env.NEXT_PUBLIC_SIGN_OUT_URL ||
+  process.env.NEXT_PUBLIC_SIGN_OUT_API ||
   "http://localhost:8080/api/v1/auth/google/logout";
 
 type Props = {

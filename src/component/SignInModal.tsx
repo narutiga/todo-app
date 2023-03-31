@@ -5,7 +5,7 @@ import Image from "next/image";
 import btn_google_signin from "./../../public/btn_google_signin.png";
 
 const URL =
-  process.env.NEXT_PUBLIC_SIGN_IN_URL ||
+  process.env.NEXT_PUBLIC_SIGN_IN_API ||
   "http://localhost:8080/api/v1/auth/google";
 
 type Props = {
