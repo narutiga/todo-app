@@ -1,7 +1,9 @@
-import { AppMantineProvider } from "@/lib/mantine/AppMantineProvider";
-import "@/styles/globals.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Dispatch, SetStateAction, createContext, useState } from "react";
 import type { CustomAppPage } from "next/app";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AppMantineProvider } from "@/lib/mantine/AppMantineProvider";
+import { Todo } from "@/lib/tanstackQuery/useQueryTodos";
+import "@/styles/globals.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -12,7 +14,25 @@ const queryClient = new QueryClient({
   },
 });
 
+const TODO: Todo = {
+  id: "",
+  title: "",
+  isDone: false,
+  dueDate: "today",
+};
+
+export const TodoContext = createContext<{
+  editingTodo: Todo;
+  setEditingTodo: Dispatch<SetStateAction<Todo>>;
+}>({
+  editingTodo: TODO,
+  setEditingTodo: () => {
+    throw Error("setEditingTodo is not defined.");
+  },
+});
+
 const App: CustomAppPage = ({ Component, pageProps }) => {
+  const [editingTodo, setEditingTodo] = useState(TODO);
   const getLayout =
     Component.getLayout ||
     ((page) => {
@@ -20,11 +40,13 @@ const App: CustomAppPage = ({ Component, pageProps }) => {
     });
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AppMantineProvider>
-        {getLayout(<Component {...pageProps} />)}
-      </AppMantineProvider>
-    </QueryClientProvider>
+    <TodoContext.Provider value={{ editingTodo, setEditingTodo }}>
+      <QueryClientProvider client={queryClient}>
+        <AppMantineProvider>
+          {getLayout(<Component {...pageProps} />)}
+        </AppMantineProvider>
+      </QueryClientProvider>
+    </TodoContext.Provider>
   );
 };
 

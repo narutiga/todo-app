@@ -18,7 +18,7 @@ import { Todo } from "@/lib/tanstackQuery/useQueryTodos";
 export const MenueButton = (todo: Todo) => {
   const { deleteTodoMutation } = useMutateTodo();
   const { changeDueDateMutation } = useMutateTodo();
-  const { editingTodo, setEditingTodo } = useContext(TodoContext);
+  const { setEditingTodo } = useContext(TodoContext);
   const { push } = useRouter();
   const editTodo = (todo: Todo) => {
     setEditingTodo((prev: Todo) => {
