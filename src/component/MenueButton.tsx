@@ -6,16 +6,29 @@ import {
   IconChevronsUp,
   IconChevronUp,
   IconDots,
+  IconPencil,
   IconTrash,
 } from "@tabler/icons-react";
+import { useRouter } from "next/router";
+import { useContext } from "react";
+import { TodoContext } from "@/pages/_app";
+import { Todo } from "@/lib/tanstackQuery/useQueryTodos";
 
 /** @package */
-export const MenueButton = (todo: any) => {
+export const MenueButton = (todo: Todo) => {
   const { deleteTodoMutation } = useMutateTodo();
   const { changeDueDateMutation } = useMutateTodo();
+  const { editingTodo, setEditingTodo } = useContext(TodoContext);
+  const { push } = useRouter();
+  const editTodo = (todo: Todo) => {
+    setEditingTodo((prev: Todo) => {
+      return { ...prev, ...todo };
+    });
+    push("/form");
+  };
 
   return (
-    <Menu shadow="xs" width={180} radius="md">
+    <Menu shadow="xs" width={202} radius="md">
       <Menu.Target>
         <IconDots color="gray" />
       </Menu.Target>
@@ -61,6 +74,9 @@ export const MenueButton = (todo: any) => {
                 changeDueDateMutation.mutate({ ...todo, newDueDate: "later" })
               }
             />
+          </Menu.Item>
+          <Menu.Item>
+            <IconPencil color="gray" onClick={() => editTodo(todo)} />
           </Menu.Item>
           <Menu.Item>
             <IconTrash
