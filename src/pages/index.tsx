@@ -1,17 +1,22 @@
 import { SignInModal, SignOutMenu, TodosList } from "@/component";
-import { TodoForm } from "@/component/TodosList";
 import { useQueryUserData } from "@/lib/tanstackQuery/useQueryUserData";
 import {
+  ActionIcon,
   AppShell,
   Avatar,
   Button,
   Flex,
   Footer,
+  Group,
   Header,
   Skeleton,
   Text,
   Title,
 } from "@mantine/core";
+import { IconPlus } from "@tabler/icons-react";
+import { useRouter } from "next/router";
+import { useContext } from "react";
+import { TodoContext } from "./_app";
 
 const listAttributes = [
   { dueDate: "today", color: "red", title: "今日する" },
@@ -21,6 +26,18 @@ const listAttributes = [
 
 const Home = () => {
   const { data: user, status } = useQueryUserData();
+  const { editingTodo, setEditingTodo } = useContext(TodoContext);
+  const { push } = useRouter();
+  const navigateToForm = (props: string) => {
+    setEditingTodo((prev) => ({
+      ...prev,
+      id: "",
+      title: "",
+      isDone: false,
+      dueDate: props,
+    })),
+      push("/form");
+  };
 
   return (
     <AppShell
@@ -75,7 +92,14 @@ const Home = () => {
               </Title>
             }
             form={
-              <TodoForm dueDate={attribute.dueDate} color={attribute.color} />
+              <ActionIcon
+                onClick={() => navigateToForm(attribute.dueDate)}
+                bg={attribute.color}
+                m={"0.25rem"}
+                radius="xl"
+              >
+                <IconPlus stroke="3px" color="white" />
+              </ActionIcon>
             }
           />
         ))}

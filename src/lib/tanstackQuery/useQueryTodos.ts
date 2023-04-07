@@ -4,7 +4,7 @@ import axios from "axios";
 const URL =
   process.env.NEXT_PUBLIC_TODOS_API || "http://localhost:8080/api/v1/todos/";
 
-type Todo = {
+export type Todo = {
   id: string;
   title: string;
   isDone: boolean;
