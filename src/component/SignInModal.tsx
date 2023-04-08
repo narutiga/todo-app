@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
+import Image from "next/image";
 import { Modal, Button, Title, Text, Center } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import Image from "next/image";
 import btn_google_signin from "./../../public/btn_google_signin.png";
 
 const URL =
@@ -26,7 +26,7 @@ export const SignInModal: FC<Props> = (props) => {
         radius="lg"
       >
         <Title mb="lg" ta="center">
-          Todoアプリ
+          Todo
         </Title>
         <Text mx="lg" my="sm" fz="xs">
           学習目的で作成したシンプルなTodoアプリです。
@@ -40,15 +40,13 @@ export const SignInModal: FC<Props> = (props) => {
               p={0}
               sx={(theme) => ({
                 borderRadius: theme.radius.md,
-                fontWeight: 600,
                 boxShadow: theme.shadows.xs,
               })}
             >
               <Image
                 src={btn_google_signin}
-                alt="Google Sign In"
-                sizes="100%"
-                style={{ borderRadius: "1rem", objectFit: "cover" }}
+                alt="Google SignIn Button"
+                style={{ objectFit: "cover" }}
               />
             </Button>
           </form>

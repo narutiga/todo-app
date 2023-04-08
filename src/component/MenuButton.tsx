@@ -1,4 +1,5 @@
-import { useMutateTodo } from "@/lib/tanstackQuery/useMutateTodo";
+import { FC, useContext } from "react";
+import { useRouter } from "next/router";
 import { Flex, Menu } from "@mantine/core";
 import {
   IconChevronDown,
@@ -9,18 +10,17 @@ import {
   IconPencil,
   IconTrash,
 } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import { useContext } from "react";
-import { TodoContext } from "@/pages/_app";
+import { useMutateTodo } from "@/lib/tanstackQuery/useMutateTodo";
 import { Todo } from "@/lib/tanstackQuery/useQueryTodos";
+import { TodoContext } from "@/pages/_app";
 
 /** @package */
-export const MenueButton = (todo: Todo) => {
+export const MenuButton: FC<Todo> = (todo) => {
   const { deleteTodoMutation } = useMutateTodo();
   const { changeDueDateMutation } = useMutateTodo();
   const { setEditingTodo } = useContext(TodoContext);
   const { push } = useRouter();
-  const editTodo = (todo: Todo) => {
+  const navigateToEditForm = (todo: Todo) => {
     setEditingTodo((prev: Todo) => {
       return { ...prev, ...todo };
     });
@@ -76,7 +76,7 @@ export const MenueButton = (todo: Todo) => {
             />
           </Menu.Item>
           <Menu.Item>
-            <IconPencil color="gray" onClick={() => editTodo(todo)} />
+            <IconPencil color="gray" onClick={() => navigateToEditForm(todo)} />
           </Menu.Item>
           <Menu.Item>
             <IconTrash

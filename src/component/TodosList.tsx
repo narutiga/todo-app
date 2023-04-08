@@ -2,7 +2,7 @@ import { FC, ReactNode } from "react";
 import { useMutateTodo } from "@/lib/tanstackQuery/useMutateTodo";
 import { useQueryTodos } from "@/lib/tanstackQuery/useQueryTodos";
 import { Checkbox, Container, Flex, List, Skeleton, Text } from "@mantine/core";
-import { MenueButton } from "./MenueButton";
+import { MenuButton } from "./MenuButton";
 
 type Props = {
   dueDate: string;
@@ -49,7 +49,7 @@ export const TodosList: FC<Props> = (props) => {
                   >
                     {todo.title}
                   </Text>
-                  <MenueButton {...todo} />
+                  <MenuButton {...todo} />
                 </Flex>
               </List.Item>
             ))}

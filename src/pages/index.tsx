@@ -1,5 +1,6 @@
-import { SignInModal, SignOutMenu, TodosList } from "@/component";
-import { useQueryUserData } from "@/lib/tanstackQuery/useQueryUserData";
+import { useContext } from "react";
+import { useRouter } from "next/router";
+import { TodoContext } from "./_app";
 import {
   ActionIcon,
   AppShell,
@@ -7,16 +8,14 @@ import {
   Button,
   Flex,
   Footer,
-  Group,
   Header,
   Skeleton,
   Text,
   Title,
 } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import { useContext } from "react";
-import { TodoContext } from "./_app";
+import { useQueryUserData } from "@/lib/tanstackQuery/useQueryUserData";
+import { SignInModal, SignOutMenu, TodosList } from "@/component";
 
 const listAttributes = [
   { dueDate: "today", color: "red", title: "今日する" },
@@ -26,9 +25,9 @@ const listAttributes = [
 
 const Home = () => {
   const { data: user, status } = useQueryUserData();
-  const { editingTodo, setEditingTodo } = useContext(TodoContext);
+  const { setEditingTodo } = useContext(TodoContext);
   const { push } = useRouter();
-  const navigateToForm = (props: string) => {
+  const navigateToCreateForm = (props: string) => {
     setEditingTodo((prev) => ({
       ...prev,
       id: "",
@@ -93,7 +92,7 @@ const Home = () => {
             }
             form={
               <ActionIcon
-                onClick={() => navigateToForm(attribute.dueDate)}
+                onClick={() => navigateToCreateForm(attribute.dueDate)}
                 bg={attribute.color}
                 m={"0.25rem"}
                 radius="xl"
