@@ -2,7 +2,7 @@ import { FC, useContext } from "react";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 import { useForm } from "@mantine/form";
-import { Box, Button, MantineProvider, Textarea } from "@mantine/core";
+import { Box, Button, Group, MantineProvider, Textarea } from "@mantine/core";
 import { TodoContext } from "@/pages/_app";
 import { useMutateTodo } from "@/lib/tanstackQuery/useMutateTodo";
 
@@ -41,9 +41,11 @@ export const TodoForm: FC = () => {
           )}
         >
           <Textarea placeholder="add Todo." {...form.getInputProps("title")} />
-          <Button mt="2rem" type="submit" onClick={() => push("/")}>
-            {editingTodo.id === "" ? "登録" : "更新"}
-          </Button>
+          <Group position="right">
+            <Button mt="2rem" type="submit" onClick={() => push("/")}>
+              {editingTodo.id === "" ? "登録" : "更新"}
+            </Button>
+          </Group>
         </form>
       </Box>
     </MantineProvider>
