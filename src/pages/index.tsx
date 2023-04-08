@@ -16,6 +16,7 @@ import {
 import { IconPlus } from "@tabler/icons-react";
 import { useQueryUserData } from "@/lib/tanstackQuery/useQueryUserData";
 import { SignInModal, SignOutMenu, TodosList } from "@/component";
+import Link from "next/link";
 
 const listAttributes = [
   { dueDate: "today", color: "red", title: "今日する" },
@@ -38,13 +39,18 @@ const Home = () => {
       push("/form");
   };
 
+  console.log("rendered Home");
+
   return (
     <AppShell
       header={
         <Header height="4rem">
           {
             <Flex px="2rem" h="4rem" justify="space-between" align="center">
-              <Title order={1}>Todo</Title>
+              <Link href="/">
+                <Title order={1}>Todo</Title>
+              </Link>
+
               {status === "loading" ? (
                 <Skeleton width={40} height={40} radius="xl" />
               ) : user ? (
