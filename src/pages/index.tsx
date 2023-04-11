@@ -97,14 +97,18 @@ const Home = () => {
               </Title>
             }
             form={
-              <ActionIcon
-                onClick={() => navigateToCreateForm(attribute.dueDate)}
-                bg={attribute.color}
-                m={"0.25rem"}
-                radius="xl"
-              >
-                <IconPlus stroke="3px" color="white" />
-              </ActionIcon>
+              user ? (
+                <ActionIcon
+                  onClick={() => navigateToCreateForm(attribute.dueDate)}
+                  bg={attribute.color}
+                  m={"0.25rem"}
+                  radius="xl"
+                >
+                  <IconPlus stroke="3px" color="white" />
+                </ActionIcon>
+              ) : (
+                <SignInModal button={<IconPlus stroke="3px" color="white" />} />
+              )
             }
           />
         ))}
