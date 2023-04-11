@@ -40,7 +40,11 @@ export const TodoForm: FC = () => {
               : updateTodoMutation.mutate(values)
           )}
         >
-          <Textarea placeholder="add Todo." {...form.getInputProps("title")} />
+          <Textarea
+            placeholder="add Todo."
+            size="md"
+            {...form.getInputProps("title")}
+          />
           <Group position="right">
             <Button mt="2rem" type="submit" onClick={() => push("/")}>
               {editingTodo.id === "" ? "登録" : "更新"}
