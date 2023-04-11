@@ -107,7 +107,13 @@ const Home = () => {
                   <IconPlus stroke="3px" color="white" />
                 </ActionIcon>
               ) : (
-                <SignInModal button={<IconPlus stroke="3px" color="white" />} />
+                <SignInModal
+                  button={
+                    <ActionIcon bg={attribute.color} m={"0.25rem"} radius="xl">
+                      <IconPlus stroke="3px" color="white" />
+                    </ActionIcon>
+                  }
+                />
               )
             }
           />
