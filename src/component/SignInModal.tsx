@@ -52,7 +52,9 @@ export const SignInModal: FC<Props> = (props) => {
           </form>
         </Center>
         <Text m="lg" fz="xs" sx={(theme) => ({ color: theme.colors.gray[6] })}>
-          利用規約、プライバシーポリシーに同意した上でログインしてください。
+          利用規約、
+          <a href="/privacy-policy">プライバシーポリシー</a>
+          に同意した上でログインしてください。
         </Text>
       </Modal>
 
