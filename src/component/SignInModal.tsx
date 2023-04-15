@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Modal, Button, Title, Text, Center } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import btn_google_signin from "./../../public/btn_google_signin.png";
+import Link from "next/link";
 
 const URL =
   process.env.NEXT_PUBLIC_SIGN_IN_API ||
@@ -53,7 +54,7 @@ export const SignInModal: FC<Props> = (props) => {
         </Center>
         <Text m="lg" fz="xs" sx={(theme) => ({ color: theme.colors.gray[6] })}>
           利用規約、
-          <a href="/privacy-policy">プライバシーポリシー</a>
+          <Link href="/privacy-policy">プライバシーポリシー</Link>
           に同意した上でログインしてください。
         </Text>
       </Modal>
