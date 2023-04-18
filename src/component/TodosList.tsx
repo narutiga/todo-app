@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
 import { useMutateTodo } from "@/lib/tanstackQuery/useMutateTodo";
 import { useQueryTodos } from "@/lib/tanstackQuery/useQueryTodos";
-import { Checkbox, Container, Flex, List, Skeleton, Text } from "@mantine/core";
+import { Checkbox, Container, Flex, List, Text } from "@mantine/core";
 import { MenuButton } from "./MenuButton";
 
 type Props = {
@@ -17,20 +17,18 @@ export const TodosList: FC<Props> = (props) => {
   const { updateTodoMutation } = useMutateTodo();
 
   return (
-    <Container mx={0} mb={"4rem"} w={"100%"}>
+    <Container p={0} mx={0} mb="4rem" w="100%">
       <Flex>
         {props.title}
         {props.form}
       </Flex>
-      <List listStyleType={"none"}>
-        {status === "loading" ? <Skeleton height={60} /> : null}
+      <List listStyleType="none">
         {todos === undefined
           ? null
           : todos.map((todo) => (
-              <List.Item key={todo.id} mb={"1rem"}>
+              <List.Item key={todo.id} mb="1rem">
                 <Flex>
                   <Checkbox
-                    mr={"1rem"}
                     color={props.color}
                     radius="xl"
                     size="md"
@@ -43,7 +41,8 @@ export const TodosList: FC<Props> = (props) => {
                     }
                   />
                   <Text
-                    w="400px"
+                    mx="1rem"
+                    size="lg"
                     c={todo.isDone ? "gray" : "dark"}
                     td={todo.isDone ? "line-through" : ""}
                   >
