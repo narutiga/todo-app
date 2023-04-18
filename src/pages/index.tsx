@@ -9,7 +9,6 @@ import {
   Flex,
   Footer,
   Header,
-  Skeleton,
   Text,
   Title,
 } from "@mantine/core";
@@ -39,8 +38,6 @@ const Home = () => {
       push("/form");
   };
 
-  console.log("rendered Home");
-
   return (
     <AppShell
       header={
@@ -51,9 +48,7 @@ const Home = () => {
                 <Title order={1}>Todo</Title>
               </Link>
 
-              {status === "loading" ? (
-                <Skeleton width={40} height={40} radius="xl" />
-              ) : user ? (
+              {user ? (
                 <SignOutMenu
                   avatar={<Avatar src={user.image} alt="it's me" radius="xl" />}
                 />
@@ -81,6 +76,7 @@ const Home = () => {
       <Flex
         mt="xl"
         mx="auto"
+        w="4/5"
         maw="32rem"
         justify="flex-start"
         align="flex-start"
